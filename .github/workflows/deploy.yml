@@ -21,6 +21,7 @@ jobs:
         with:
           path: e-learning-docs
           package-manager: npm
+          node-version: 22
 
   deploy:
     needs: build
