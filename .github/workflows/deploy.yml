@@ -16,12 +16,41 @@ jobs:
     steps:
       - name: Checkout your repository using git
         uses: actions/checkout@v4
-      - name: Install, build, and upload your site
-        uses: withastro/action@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          path: e-learning-docs
-          package-manager: npm
           node-version: 22
+
+      # 1. Build โปรเจกต์ลูกค้าเจ้าที่ 1 (e-learning)
+      - name: Install and build e-learning-docs
+        working-directory: ./e-learning-docs
+        run: |
+          npm ci
+          npm run build
+
+      # 2. (คอมเมนต์ไว้สำหรับลูกค้าเจ้าที่ 2 ในอนาคต)
+      # - name: Install and build client-b-docs
+      #   working-directory: ./client-b-docs
+      #   run: |
+      #     npm ci
+      #     npm run build
+
+      # 3. รวมไฟล์ทั้งหมดตามโครงสร้าง URL
+      - name: Prepare _site directory
+        run: |
+          mkdir -p _site/docs/e-learning
+          cp -r e-learning-docs/dist/* _site/docs/e-learning/
+
+          # (คอมเมนต์ไว้สำหรับลูกค้าเจ้าที่ 2 ในอนาคต)
+          # mkdir -p _site/docs/client-b
+          # cp -r client-b-docs/dist/* _site/docs/client-b/
+
+      # 4. อัปโหลดขึ้น GitHub Pages
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
 
   deploy:
     needs: build

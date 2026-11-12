@@ -5,6 +5,7 @@ import starlight from '@astrojs/starlight';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://it-technocom.github.io',
+  base: '/docs/e-learning',
 	integrations: [
 		starlight({
 			title: 'IT Technocom | E-Learning Document',
