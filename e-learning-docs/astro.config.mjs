@@ -16,8 +16,20 @@ export default defineConfig({
           items: [
             { label: 'Example Guide', slug: 'guides/example' },
             {
+              label: 'การใช้งานระบบฝั่งคุณครู (Teacher)',
+              slug: 'guides/teacher-guide',
+            },
+            {
+              label: 'การใช้งานระบบฝั่งนักเรียน (Student)',
+              slug: 'guides/student-guide',
+            },
+            {
               label: 'ทำไมต้อง YouTube Video Hosting?',
               slug: 'guides/youtube-video-hosting',
+            },
+            {
+              label: 'วิธีการเพิ่ม Chapter และ Timeline ให้ลิงก์กับ App',
+              slug: 'guides/youtube-chapters-timeline',
             },
           ],
         },
