@@ -1,130 +1,136 @@
 ---
 title: สูตรการคำนวณในระบบ
-description: รายละเอียดสูตรการคำนวณ ตรรกะคะแนน เกณฑ์การประเมิน และตัวชี้วัดต่าง ๆ ในระบบ E-Learning
+description: สรุป 5 กลุ่มการคำนวณหลักในระบบ E-Learning แปลงข้อมูลดิบเป็นตัวเลขสำหรับแสดงผลและตัดสินสถานะ
 ---
 
-เอกสารนี้รวบรวมสูตรการคำนวณ ตรรกะทางคณิตศาสตร์ และตำแหน่งโค้ดที่เกี่ยวข้องทั้งหมดภายในระบบ E-Learning
+สรุปคือระบบมี 5 กลุ่มการคำนวณหลัก โดยทุกสูตรแปลงข้อมูลดิบให้เป็นตัวเลขที่นำไปแสดงผลหรือตัดสินสถานะได้
 
 ---
 
-### 1. การคำนวณคะแนนแบบทดสอบ (Quiz Scoring)
+### 1. คะแนนแบบทดสอบ (Quiz Scoring)
+
+- **TotalPoints** คือคะแนนเต็มของแบบทดสอบ: รวม points ของทุกข้อ
+- **EarnedPoints** คือคะแนนที่ผู้เรียนได้จริง: รวมคะแนนเฉพาะข้อที่ตอบถูก
+- **Score** คือคะแนนคิดเป็นเปอร์เซ็นต์
+- **isPassed** ใช้ตัดสินผ่าน/ไม่ผ่าน โดยเทียบกับ pass_score
+
+> **ตัวอย่าง:** มี 3 ข้อ คะแนนข้อละ 2, 3, 5 คะแนนเต็มคือ 10 คะแนน  
+> ผู้เรียนตอบถูกข้อ 1 และ 3 จึงได้ 2 + 5 = 7  
+> 
+> ```text
+> Score = round((7 / 10) × 100, 2) = 70.00%
+> ```
+> 
+> ถ้า `pass_score = 60` จะได้ `isPassed = true`
+
+*กรณี TotalPoints ≤ 0 ระบบใช้จำนวนข้อ หรือ 1 แทน เพื่อไม่ให้เกิดการหารด้วยศูนย์ เช่น แบบทดสอบที่ไม่ได้กำหนดคะแนนรายข้อ*
 
 - **ตำแหน่งโค้ด:**
   - `app/Http/Controllers/Student/QuizController.php:115-150`
   - `app/Http/Controllers/Api/QuizController.php:147-185`
 
-- **สูตรที่ใช้:**
-
-  **1. คะแนนเต็มทั้งหมด (TotalPoints):**
-  ```text
-  TotalPoints = ∑(points ของแต่ละข้อ)
-  ```
-  *(หากผลรวม ≤ 0 ระบบจะ fallback ใช้จำนวนข้อ หรือค่า 1 เพื่อป้องกันปัญหาหารด้วยศูนย์)*
-
-  **2. คะแนนที่ผู้เรียนทำได้ (EarnedPoints):**
-  ```text
-  EarnedPoints = ∑(points ของข้อที่เลือกคำตอบถูกต้อง)
-  ```
-
-  **3. แปลงคะแนนเป็นร้อยละ (Score Percentage):**
-  ```text
-                 ⎛⎛EarnedPoints⎞         ⎞
-  Score = round⎜⎜────────────⎟ × 100, 2⎟
-                 ⎝⎝TotalPoints ⎠         ⎠
-  ```
-
-  **4. เกณฑ์การผ่าน (isPassed):**
-  ```text
-  isPassed = (Score ≥ pass_score)
-  ```
-
 ---
 
-### 2. การคำนวณความคืบหน้าของคอร์สเรียน (Course Progress Percentage)
+### 2. ความคืบหน้าคอร์ส (Course Progress)
+
+ใช้จำนวนบทเรียนที่เรียนจบหารด้วยจำนวนบทเรียนทั้งหมด แล้วแปลงเป็นเปอร์เซ็นต์:
+
+```text
+ProgressPercent = round((CompletedLessons / TotalLessons) × 100, 2)
+```
+
+> **ตัวอย่าง:** คอร์สมี 12 บท เรียนจบแล้ว 9 บท  
+> 
+> ```text
+> round((9 / 12) × 100, 2) = 75.00%
+> ```
+
+เมื่อความคืบหน้าถึง 100% ระบบจะเปลี่ยนสถานะการลงทะเบียนเป็น `COMPLETED` ออกเลขใบประกาศ และอัปเดตภารกิจประจำวันโดยอัตโนมัติ
 
 - **ตำแหน่งโค้ด:**
   - `app/Http/Controllers/Student/LearningController.php:286-295`
   - `app/Http/Controllers/Api/LearningController.php:181-188`
 
-- **สูตรที่ใช้:**
-  ```text
-                         ⎛⎛CompletedLessons⎞         ⎞
-  ProgressPercent = round⎜⎜────────────────⎟ × 100, 2⎟
-                         ⎝⎝  TotalLessons  ⎠         ⎠
-  ```
-
-- **เงื่อนไขเพิ่มเติม:**
-  - หาก `ProgressPercent ≥ 100%` ระบบจะเปลี่ยนสถานะการลงทะเบียนเป็น `COMPLETED` และออกเลขที่ใบประกาศนียบัตร (Certificate) ให้อัตโนมัติ พร้อมอัปเดตภารกิจประจำวัน
-
 ---
 
-### 3. การคำนวณระบบดาวและเกมมิฟิเคชัน (Gamification & Total Stars)
+### 3. ดาวสะสมและเกมมิฟิเคชัน (Gamification & Total Stars)
+
+```text
+TotalEarned = AttendanceStars + (CompletedLessons × 3) + QuestStars
+```
+
+**ความหมายของแต่ละส่วน:**
+- **AttendanceStars:** เช็กชื่อ 1 วัน ได้ 1 ดาว
+- **CompletedLessons × 3:** เรียนจบ 1 บท ได้ 3 ดาว
+- **QuestStars:** ดาวจากการกดรับรางวัลภารกิจประจำวัน
+
+> **ตัวอย่าง:** เช็กชื่อ 8 วัน, เรียนจบ 10 บท, รับดาวจากภารกิจ 12 ดาว  
+> 
+> ```text
+> TotalEarned = 8 + (10 × 3) + 12 = 50 ดาว
+> ```
+
+**Streak Days (วันเข้าเรียนต่อเนื่อง):**  
+จะดูประวัติวันเข้าเรียนล่าสุดก่อน: ถ้าเข้าวันนี้หรือเมื่อวาน ยังถือว่าต่อเนื่องได้ จากนั้นไล่วันย้อนหลังเพื่อดูว่าวันก่อนหน้าเรียงติดกันหรือไม่ เช่น เข้าเรียนวันที่ 10, 9, 8 พ.ย. = streak 3 วัน และระบบเก็บ `BestStreak` เป็นสถิติสูงสุดที่เคยทำได้
 
 - **ตำแหน่งโค้ด:** `app/Services/GamificationService.php:391-421`
 
-- **สูตรคำนวณดาวสะสมรวม (TotalEarned):**
-  ```text
-  TotalEarned = AttendanceStars + (CompletedLessons × 3) + QuestStars
-  ```
-  - **AttendanceStars:** เช็คชื่อเข้าเรียน (1 ดาวต่อวัน)
-  - **CompletedLessons × 3:** เรียนจบแต่ละบทเรียน ได้รับ 3 ดาว ต่อ 1 บทเรียน
-  - **QuestStars:** ดาวรางวัลที่กดรับจากภารกิจประจำวัน (Daily Quests)
-
-- **การคำนวณวันเข้าเรียนต่อเนื่อง (Streak Days):**
-  - เช็ควันที่เข้าเรียนล่าสุด (`LatestDate`) ว่าเป็นวันนี้หรือเมื่อวาน (`diffInDays ≤ 1`) หรือไม่
-  - หากต่อเนื่อง จะวนลูปเช็ค `Dateᵢ - 1 = Dateᵢ₊₁` เพื่อหาจำนวนวันติดต่อกัน (Streak) และหาค่าสถิติสูงสุด (BestStreak)
-
 ---
 
-### 4. การคำนวณสถิติและตัวชี้วัดแดชบอร์ดครู (Teacher / Classroom KPIs)
+### 4. ตัวชี้วัดแดชบอร์ดครู (Teacher / Classroom KPIs)
+
+- **อัตราสำเร็จการเรียน:**
+  ```text
+  CompletionRate = round((CompletedEnrollments / TotalEnrollments) × 100, 1)
+  ```
+  *เช่น มีการลงทะเบียน 40 คน เรียนจบ 30 คน = 75.0%*
+
+- **คะแนนเฉลี่ยก่อน/หลังเรียน:**
+  ```text
+  PreTestAvg = round(ค่าเฉลี่ยคะแนนก่อนเรียน, 1)
+  PostTestAvg = round(ค่าเฉลี่ยคะแนนหลังเรียน, 1)
+  ```
+
+- **คะแนนพัฒนาการ:**
+  ```text
+  ScoreDelta = round(PostTestAvg - PreTestAvg, 1)
+  ```
+  *เช่น ก่อนเรียนเฉลี่ย 52.4 หลังเรียน 71.8 พัฒนาการคือ 71.8 - 52.4 = +19.4*
+
+- **นักเรียนที่ต้องดูแลเป็นพิเศษ:**  
+  จัดเข้ากลุ่มเมื่อเป็นจริงอย่างน้อยหนึ่งข้อ:
+  ```text
+  (PostScore > 0 และ PostScore < 60) หรือ (Progress < 30%)
+  ```
+  ดังนั้น นักเรียนหลังเรียนได้ 55 คะแนน แม้เรียนไป 80% ก็ยังต้องติดตาม หรือแม้หลังเรียนได้ 80 คะแนน แต่คืบหน้าเพียง 25% ก็ต้องติดตามเช่นกัน  
+  *(เงื่อนไข `PostScore > 0` ช่วยไม่ให้คะแนนที่ยังไม่มีผลหรือยังไม่ได้ทำ post-test ถูกตีความว่าเป็นคะแนนตกทันที)*
 
 - **ตำแหน่งโค้ด:**
   - `app/Http/Controllers/Teacher/ClassroomDashboardController.php:75-107`
   - `app/Http/Controllers/Teacher/DashboardController.php:30-42`
   - `app/Http/Controllers/Teacher/StudentController.php:500-520`
 
-- **สูตรที่ใช้:**
-
-  **1. อัตราการสำเร็จการศึกษา (Completion Rate):**
-  ```text
-                        ⎛⎛CompletedEnrollments⎞         ⎞
-  CompletionRate = round⎜⎜────────────────────⎟ × 100, 1⎟
-                        ⎝⎝  TotalEnrollments  ⎠         ⎠
-  ```
-
-  **2. คะแนนเฉลี่ยก่อนเรียนและหลังเรียน (Pre vs Post Avg):**
-  ```text
-  PreTestAvg = round(ค่าเฉลี่ยคะแนน Pre-test, 1)
-
-  PostTestAvg = round(ค่าเฉลี่ยคะแนน Post-test, 1)
-  ```
-
-  **3. คะแนนพัฒนาการ (Score Delta / Trend):**
-  ```text
-  ScoreDelta = round(PostTestAvg - PreTestAvg, 1)
-  ```
-
-  **4. สูตรคัดกรองนักเรียนที่ต้องดูแลพิเศษ (Needs Support Status):**
-  ```text
-  Needs Support ⟺ (PostScore > 0 ∧ PostScore < 60) ∨ (Progress < 30%)
-  ```
-  *(หากคะแนนหลังเรียนน้อยกว่า 60 หรือความคืบหน้าการเรียนต่ำกว่า 30% จะจัดเป็นกลุ่มที่ต้องติดตามพิเศษทันที)*
-
 ---
 
-### 5. การคำนวณแอนิเมชันกราฟโดนัท (Donut Chart SVG Offset)
+### 5. แอนิเมชันกราฟโดนัท (Donut Chart SVG Offset)
+
+วงกลมรัศมี 40 มีเส้นรอบวงประมาณ:
+```text
+Circumference = 2 × π × 40 = 251.327
+```
+
+กราฟใช้ `stroke-dashoffset` เพื่อซ่อน/แสดงความยาวของเส้นตามเปอร์เซ็นต์:
+```text
+StrokeDashoffset = Circumference - ((Percentage / 100) × Circumference)
+```
+
+> **ตัวอย่างที่ 75%:**
+> ```text
+> 251.327 - (0.75 × 251.327) ≈ 62.832
+> ```
+
+- **0%** → offset เท่ากับเส้นรอบวงทั้งหมด → แถบสียังไม่ปรากฏ
+- **100%** → offset เป็น 0 → แถบสีปรากฏครบวง
+- **ค่าระหว่างนั้น** → ปรากฏเป็นสัดส่วนตามเปอร์เซ็นต์
 
 - **ตำแหน่งโค้ด:** `resources/js/components/admin/CompletionDonutChart.svelte:16-17`
-
-- **สูตรที่ใช้:**
-  - หาเส้นรอบวงของวงกลมรัศมี `r = 40`:
-  ```text
-  Circumference = 2 × π × 40 ≈ 251.327
-  ```
-
-  - คำนวณระยะการวาดแถบสีตามเปอร์เซ็นต์ความคืบหน้า:
-  ```text
-                                     ⎛Percentage                ⎞
-  StrokeDashoffset = Circumference - ⎜────────── × Circumference⎟
-                                     ⎝   100                    ⎠
-  ```
