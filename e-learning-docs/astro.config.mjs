@@ -34,6 +34,10 @@ export default defineConfig({
           ],
         },
         {
+          label: 'Student',
+          items: [{ autogenerate: { directory: 'student' } }],
+        },
+        {
           label: 'Reference',
           items: [{ autogenerate: { directory: 'reference' } }],
         },
