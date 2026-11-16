@@ -41,6 +41,8 @@ jobs:
         run: |
           mkdir -p _site/docs/e-learning
           cp -r e-learning-docs/dist/* _site/docs/e-learning/
+          touch _site/.nojekyll
+          touch _site/docs/e-learning/.nojekyll
 
           # (คอมเมนต์ไว้สำหรับลูกค้าเจ้าที่ 2 ในอนาคต)
           # mkdir -p _site/docs/client-b
