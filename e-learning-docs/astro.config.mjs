@@ -14,7 +14,10 @@ export default defineConfig({
         {
           label: 'Guides',
           items: [
-            { label: 'Example Guide', slug: 'guides/example' },
+            {
+              label: 'ระบบเพิ่มสมาชิกและการเชิญผู้ใช้งาน',
+              slug: 'guides/member-registration',
+            },
             {
               label: 'การใช้งานระบบฝั่งคุณครู (Teacher)',
               slug: 'guides/teacher-guide',
