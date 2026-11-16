@@ -43,6 +43,7 @@ jobs:
           cp -r e-learning-docs/dist/* _site/docs/e-learning/
           touch _site/.nojekyll
           touch _site/docs/e-learning/.nojekyll
+          echo '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=/docs/e-learning/"><script>window.location.href="/docs/e-learning/"</script></head><body>Redirecting to <a href="/docs/e-learning/">E-Learning Documentation</a>...</body></html>' > _site/index.html
 
           # (คอมเมนต์ไว้สำหรับลูกค้าเจ้าที่ 2 ในอนาคต)
           # mkdir -p _site/docs/client-b
