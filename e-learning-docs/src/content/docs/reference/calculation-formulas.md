@@ -7,7 +7,7 @@ description: สรุป 5 กลุ่มการคำนวณหลัก�
 
 ---
 
-### 1. คะแนนแบบทดสอบ (Quiz Scoring)
+## 1. คะแนนแบบทดสอบ (Quiz Scoring)
 
 - **TotalPoints** คือคะแนนเต็มของแบบทดสอบ: รวม points ของทุกข้อ
 - **EarnedPoints** คือคะแนนที่ผู้เรียนได้จริง: รวมคะแนนเฉพาะข้อที่ตอบถูก
@@ -31,7 +31,7 @@ description: สรุป 5 กลุ่มการคำนวณหลัก�
 
 ---
 
-### 2. ความคืบหน้าคอร์ส (Course Progress)
+## 2. ความคืบหน้าคอร์ส (Course Progress)
 
 ใช้จำนวนบทเรียนที่เรียนจบหารด้วยจำนวนบทเรียนทั้งหมด แล้วแปลงเป็นเปอร์เซ็นต์:
 
@@ -53,7 +53,7 @@ ProgressPercent = round((CompletedLessons / TotalLessons) × 100, 2)
 
 ---
 
-### 3. ดาวสะสมและเกมมิฟิเคชัน (Gamification & Total Stars)
+## 3. ดาวสะสมและเกมมิฟิเคชัน (Gamification & Total Stars)
 
 ```text
 TotalEarned = AttendanceStars + (CompletedLessons × 3) + QuestStars
@@ -77,7 +77,7 @@ TotalEarned = AttendanceStars + (CompletedLessons × 3) + QuestStars
 
 ---
 
-### 4. ตัวชี้วัดแดชบอร์ดครู (Teacher / Classroom KPIs)
+## 4. ตัวชี้วัดแดชบอร์ดครู (Teacher / Classroom KPIs)
 
 - **อัตราสำเร็จการเรียน:**
   ```text
@@ -112,7 +112,7 @@ TotalEarned = AttendanceStars + (CompletedLessons × 3) + QuestStars
 
 ---
 
-### 5. แอนิเมชันกราฟโดนัท (Donut Chart SVG Offset)
+## 5. แอนิเมชันกราฟโดนัท (Donut Chart SVG Offset)
 
 วงกลมรัศมี 40 มีเส้นรอบวงประมาณ:
 ```text

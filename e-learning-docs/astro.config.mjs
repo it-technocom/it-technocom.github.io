@@ -9,6 +9,10 @@ export default defineConfig({
 	integrations: [
 		starlight({
 			title: 'IT Technocom | E-Learning Document',
+			tableOfContents: {
+				minHeadingLevel: 2,
+				maxHeadingLevel: 3,
+			},
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/withastro/starlight' }],
 			sidebar: [
         {
