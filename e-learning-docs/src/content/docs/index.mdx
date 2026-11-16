@@ -1,40 +1,100 @@
 ---
-title: Welcome to Starlight
-description: Get started building your docs site with Starlight.
-template: splash # Remove or comment out this line to display the site sidebar on this page.
+title: ศูนย์ข้อมูลระบบ Web E-Learning
+description: คู่มือการใช้งานและเอกสารอ้างอิงทางเทคนิคสำหรับระบบ Web E-Learning นักเรียนชั้น ป.2
+template: splash
 hero:
-  tagline: Congrats on setting up a new Starlight project!
+  tagline: คู่มือการใช้งาน สถาปัตยกรรมระบบ และสูตรการคำนวณ ครอบคลุมตั้งแต่การจัดการสมาชิก สื่อการสอน ไปจนถึงการวัดผลสัมฤทธิ์
   image:
     file: ../../assets/houston.webp
   actions:
-    - text: ระบบเพิ่มสมาชิกและการเชิญผู้ใช้งาน
+    - text: ระบบเพิ่มสมาชิก & คำเชิญ
       link: /docs/e-learning/guides/member-registration/
       icon: right-arrow
-    - text: คู่มือการใช้งานฝั่งคุณครู
+      variant: primary
+    - text: คู่มือระบบฝั่งคุณครู
       link: /docs/e-learning/guides/teacher-guide/
-      icon: right-arrow
+      icon: document
+      variant: secondary
+    - text: คู่มือระบบฝั่งนักเรียน
+      link: /docs/e-learning/guides/student-guide/
+      icon: open-book
       variant: minimal
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import { Card, CardGrid, LinkCard, Badge } from '@astrojs/starlight/components';
 
-## Next steps
+## 📚 หมวดหมู่คู่มือการใช้งาน (Guides)
 
 <CardGrid stagger>
-	<Card title="Update content" icon="pencil">
-		Edit `src/content/docs/index.mdx` to see this page change.
-	</Card>
-	<Card title="Change page layout" icon="document">
-		Delete `template: splash` in `src/content/docs/index.mdx` to display a
-		sidebar on this page.
-	</Card>
-	<Card title="Add new content" icon="add-document">
-		Add Markdown or MDX files to `src/content/docs` to create new pages.
-	</Card>
-	<Card title="Configure your site" icon="setting">
-		Edit your `sidebar` and other config in `astro.config.mjs`.
-	</Card>
-	<Card title="Read the docs" icon="open-book">
-		Learn more in [the Starlight Docs](https://starlight.astro.build/).
-	</Card>
+  <Card title="ระบบเพิ่มสมาชิกและการเชิญ" icon="seti:graphql">
+    จัดการสิทธิ์แบบลำดับขั้น ตั้งแต่ผู้ดูแลระบบเริ่มต้น (Admin) ส่งลิงก์คำเชิญผ่านอีเมล จนถึงการที่ครูผู้สอนเพิ่มนักเรียนเข้าสู่ห้องเรียน
+    <div style="margin-top: 1rem;">
+      <LinkCard
+        title="อ่านคู่มือเพิ่มสมาชิก"
+        description="ขั้นตอนการเชิญ Admin, ครู และการกรอกข้อมูลนักเรียน"
+        href="/docs/e-learning/guides/member-registration/"
+      />
+    </div>
+  </Card>
+
+  <Card title="การใช้งานฝั่งคุณครู (Teacher)" icon="laptop">
+    ศูนย์กลางบริหารจัดการบทเรียน วิดีโอการสอน การแทรกข้อสอบ In-Video Quiz ตลอดจนการดู Dashboard ติดตามผลการเรียนทั้งรายคนและภาพรวม
+    <div style="margin-top: 1rem;">
+      <LinkCard
+        title="อ่านคู่มือฝั่งคุณครู"
+        description="ขั้นตอนการสร้างบทเรียน ข้อสอบ Pre/Post-test และการวิเคราะห์ผล"
+        href="/docs/e-learning/guides/teacher-guide/"
+      />
+    </div>
+  </Card>
+
+  <Card title="การใช้งานฝั่งนักเรียน (Student)" icon="pencil">
+    ออกแบบตามแนวคิดการเรียนรู้ตามลำดับขั้น (Sequential Learning) วัดพื้นฐานก่อนเรียน รับชมวิดีโอทบทวนซ้ำได้ และทำข้อสอบเพื่อปลดล็อกบทถัดไป
+    <div style="margin-top: 1rem;">
+      <LinkCard
+        title="อ่านคู่มือฝั่งนักเรียน"
+        description="ลำดับการเรียนรู้ Dashboard นักเรียน และเงื่อนไขการผ่านบทเรียน"
+        href="/docs/e-learning/guides/student-guide/"
+      />
+    </div>
+  </Card>
+
+  <Card title="YouTube Video Hosting & Chapters" icon="youtube">
+    กลยุทธ์การลดต้นทุน Infrastructure ด้วย YouTube พร้อมวิธีเพิ่ม Chapter และ Timeline เพื่อให้ซิงก์ตรงกับจุดคำถามบนแอปพลิเคชัน
+    <div style="margin-top: 1rem;">
+      <LinkCard
+        title="ทำไมต้อง YouTube Video Hosting?"
+        description="วิเคราะห์ความคุ้มค่าและสถาปัตยกรรมระบบวิดีโอ"
+        href="/docs/e-learning/guides/youtube-video-hosting/"
+      />
+      <LinkCard
+        title="การตั้งค่า Chapter & Timeline"
+        description="สอนเทคนิคการใส่ Timestamp ให้เชื่อมโยงกับแอป"
+        href="/docs/e-learning/guides/youtube-chapters-timeline/"
+      />
+    </div>
+  </Card>
+</CardGrid>
+
+---
+
+## 📐 ข้อมูลอ้างอิงและสูตรการคำนวณ (Reference)
+
+<CardGrid>
+  <Card title="สูตรการคำนวณในระบบ (Calculation Formulas)" icon="setting">
+    รวบรวม 5 สูตรและเกณฑ์การประเมินสำคัญในระบบ ได้แก่:
+    - **Quiz Scoring:** การคิดคะแนนร้อยละและเกณฑ์ผ่าน/ไม่ผ่าน
+    - **Course Progress:** เปอร์เซ็นต์ความคืบหน้าและการออกใบประกาศ
+    - **Gamification:** การสะสมดาวและจำนวนวันเข้าเรียนต่อเนื่อง (Streak)
+    - **Teacher KPIs:** อัตราการเรียนจบ และการคัดกรองกลุ่มที่ต้องดูแลพิเศษ
+    - **Donut Chart SVG:** การคำนวณ Offset กราฟวงกลมแสดงผลลัพธ์
+    
+    <div style="margin-top: 1rem;">
+      <LinkCard
+        title="ดูสูตรการคำนวณทั้งหมด"
+        description="พร้อมตัวอย่างการคิดและตำแหน่ง Source Code ในระบบ"
+        href="/docs/e-learning/reference/calculation-formulas/"
+      />
+    </div>
+  </Card>
 </CardGrid>

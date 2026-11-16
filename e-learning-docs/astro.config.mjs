@@ -9,6 +9,7 @@ export default defineConfig({
 	integrations: [
 		starlight({
 			title: 'IT Technocom | E-Learning Document',
+			customCss: ['./src/styles/custom.css'],
 			tableOfContents: {
 				minHeadingLevel: 2,
 				maxHeadingLevel: 3,
